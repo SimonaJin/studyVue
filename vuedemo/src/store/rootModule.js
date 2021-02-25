@@ -9,7 +9,7 @@ export default {
     mutations: {
         [types.SET_SLIDERS](state, payload) {
             state.sliders = payload;
-				},
+				}
 		},
     actions: {
       //调用getSlider()的api

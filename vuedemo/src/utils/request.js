@@ -22,13 +22,14 @@ class HttpRequest{
 		},err=>{
 			//单独处理其他的状态码异常
 			switch(err.response.status){
-				case '400':
+				case 400:
 					return Promise.reject('参数不对')
 					break;
-				case '401':
+				case 401:
 					return Promise.reject('没权限')
 					break;
-				default:
+				case 501:
+					return Promise.reject('没权限')
 					break;
 			}
 			return Promise.reject(err)
