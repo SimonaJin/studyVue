@@ -5,8 +5,9 @@ export const setLocal = (key,value) => {
 	localStorage.setItem(key,value)
 }
 export const getLocal = (key) => {
-	if(key.startsWith('[') || key.startsWith('{')) {
-		return JSON.parse(localStorage.getItem(key));
+	let value = localStorage.getItem(key) || '';
+	if(value.includes('[') || value.includes('{')) {
+		return JSON.parse(value);
 	}else{
 		return localStorage.getItem(key) || '';
 	}

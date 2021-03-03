@@ -7,7 +7,7 @@
 					<page-header></page-header>
 				</a-layout-header>
 				<!-- content -->
-				<a-layout-content>
+				<a-layout-content style="height:84vh">
 					<router-view></router-view>
 				</a-layout-content>
 				<!-- footer -->

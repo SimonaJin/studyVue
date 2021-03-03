@@ -35,6 +35,10 @@ import {v4} from 'uuid';
 import { getLocal, setLocal } from '@/utils/localstorage';
 import * as apipublic from '@/api/public';
 
+import {createNamespacedHelpers} from 'vuex';
+let {mapActions} = createNamespacedHelpers('user');
+import * as types from "../../store/action-types";
+
 export default {
 	data () {
 		return {
@@ -61,6 +65,7 @@ export default {
 	},
 
 	methods: {
+	...mapActions([types.USER_LOGIN]),
 	//获取验证码
 	async getCaptcha(){
 		let data = await apipublic.getCaptcha();
@@ -68,14 +73,22 @@ export default {
 	},
 		// 登录
 	async onSubmit() {
+			
+				if(!this.uid && getLocal('uuid')){
+					this.uid = getLocal('uuid');
+				}else {
+					setLocal('uuid', v4());
+				}
 			try {
-				// await public.getCaptcha(this.form);
-				// this.$message.success('注册成功，去登录！');
-				// setTimeout(()=>{
-				// 	this.$router.push('/login')
-				// },1000)
-			} catch (error) {
-				console.log(error,'reg error')
+				this[types.USER_LOGIN]({...this.form, uid:this.uid}).then(res =>{
+					this.$message.success('登录成功！');
+					setTimeout(()=>{
+						this.$router.push('/')
+					},1000)
+				}).catch(err=>{
+					this.$message.error(err.message);
+				});				
+			} catch (error) {			
 				this.$message.error(error);
 			}
 			

@@ -1,6 +1,8 @@
 //封装请求axios
 import axios from 'axios';
-import config from '../config/index'
+import config from '../config/index';
+import {getLocal} from '@/utils/localstorage';
+
 class HttpRequest{
 	constructor(){
 		//可以增加实例属性 后台接口的路径 开发模式和生产模式
@@ -9,7 +11,8 @@ class HttpRequest{
 	}
 	setInterceptors(instance){
 		instance.interceptors.request.use(config => {
-			// 一般增加一些token属性等
+			// 一般增加一些token属性等  jwt
+			config.headers.authorization = 'Bearer ' + getLocal('token')
 			return config
 		})
 		instance.interceptors.response.use(res => {
@@ -20,6 +23,7 @@ class HttpRequest{
 				return Promise.reject(res.data.data)
 			}
 		},err=>{
+			console.log(err.response)
 			//单独处理其他的状态码异常
 			switch(err.response.status){
 				case 400:
@@ -28,8 +32,14 @@ class HttpRequest{
 				case 401:
 					return Promise.reject('没权限')
 					break;
+				case 500:
+					return Promise.reject(err.response.data)
+					break;
 				case 501:
 					return Promise.reject('没权限')
+					break;
+				default:
+					return Promise.reject(err.response)
 					break;
 			}
 			return Promise.reject(err)
